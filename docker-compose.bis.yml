@@ -1,0 +1,59 @@
+services:
+  jellyfin:
+    image: lscr.io/linuxserver/jellyfin:latest
+    container_name: jellyfin
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - UMASK_SET=<022> #optional
+      # - JELLYFIN_PublishedServerUrl=192.168.0.5 #optional
+    volumes:
+      - ${DOCKERCONFDIR}/jellyfin:/config
+      - ${DOCKERSTORAGEDIR}/media:/data
+    group_add:
+      - "107"
+    devices:
+      - /dev/dri:/dev/dri
+    ports:
+      - 8096:8096
+      - 8920:8920 #optional
+    restart: unless-stopped
+
+  portainer:
+    image: portainer/agent
+    container_name: portainer-agent
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /volume1/@docker/volumes:/var/lib/docker/volumes
+    ports:
+      - 9001:9001
+
+  watchtower:
+    image: containrrr/watchtower
+    container_name: watchtower
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - WATCHTOWER_CLEANUP=true
+      - WATCHTOWER_INCLUDE_RESTARTING=true
+      - WATCHTOWER_INCLUDE_STOPPED=true
+      - WATCHTOWER_REVIVE_STOPPED=false
+      - WATCHTOWER_NO_RESTART=false
+      - WATCHTOWER_TIMEOUT=30s
+      - WATCHTOWER_SCHEDULE=0 0 4 * * *
+      - WATCHTOWER_DEBUG=false
+      - TZ=${TZ}
+
+  cloudflared:
+    container_name: cloudflared-tunnel
+    image: cloudflare/cloudflared
+    restart: always
+    command:
+      - tunnel
+      - --no-autoupdate
+      - run
+      - --token
+      - ${TOKEN}
