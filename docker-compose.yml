@@ -1,220 +1,221 @@
+x-environment: &default-environment
+  PUID: ${PUID}
+  PGID: ${PGID}
+  TZ: ${TZ}
+
+x-common: &common
+  restart: unless-stopped
+
 services:
-  portainer:
-    image: portainer/portainer-ce
-    container_name: portainer
-    restart: always
+  adguardhome:
+    <<: *common
+    image: adguard/adguardhome
+    container_name: adguardhome
+    network_mode: host
     ports:
-      - 9000:9000
-    command: -H unix:///var/run/docker.sock
+      - 53:53/tcp
+      - 53:53/udp
+      - 80:80/tcp
+      - 443:443/tcp
+      - 443:443/udp
+      - 3000:3000/tcp
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ${DOCKERCONFDIR}/portainer:/data
+      - ${DOCKERCONFDIR}/adguardhome/work:/opt/adguardhome/work
+      - ${DOCKERCONFDIR}/adguardhome/conf:/opt/adguardhome/conf
     environment:
-      - TZ=${TZ}
-
-  watchtower:
-    image: containrrr/watchtower
-    container_name: watchtower
-    restart: unless-stopped
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    environment:
-      - WATCHTOWER_CLEANUP=true
-      - WATCHTOWER_INCLUDE_RESTARTING=true
-      - WATCHTOWER_INCLUDE_STOPPED=true
-      - WATCHTOWER_REVIVE_STOPPED=false
-      - WATCHTOWER_NO_RESTART=false
-      - WATCHTOWER_TIMEOUT=30s
-      - WATCHTOWER_SCHEDULE=0 0 4 * * 6
-      - WATCHTOWER_DEBUG=false
-      - TZ=${TZ}
-
-  uptime-kuma:
-    image: louislam/uptime-kuma:1
-    container_name: uptime-kuma
-    volumes:
-      - ${DOCKERCONFDIR}/uptime-kuma-data:/app/data
-    ports:
-      - 3001:3001 # <Host Port>:<Container Port>
-    environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=${TZ}
-    restart: always
-
-  pihole:
-    image: pihole/pihole:latest
-    container_name: pihole
-    ports:
-      - "53:53/tcp"
-      - "53:53/udp"
-      - "67:67/udp" # Only required if you are using Pi-hole as your DHCP server
-      - "8080:80/tcp"
-    environment:
-      - TZ=${TZ}
-    #  - WEBPASSWORD=${PIHOLE_WEBPASSWORD} # WEBPASSWORD: 'set a secure password here or it will be random'
-    # Volumes store your data between container upgrades
-    volumes:
-      - ${DOCKERCONFDIR}/pihole/pihole:/etc/pihole
-      - ${DOCKERCONFDIR}/pihole/dnsmasq.d:/etc/dnsmasq.d
-    #   https://github.com/pi-hole/docker-pi-hole#note-on-capabilities
-    cap_add:
-      - NET_ADMIN # Recommended but not required (DHCP needs NET_ADMIN)
-    restart: unless-stopped
+      <<: [*default-environment]
 
   cloudflared:
-    container_name: cloudflared-tunnel
+    <<: *common
     image: cloudflare/cloudflared
-    restart: always
-    command:
-      - tunnel
-      - --no-autoupdate
-      - run
-      - --token
-      - ${TOKEN}
-
-  plex:
-    image: ghcr.io/linuxserver/plex
-    container_name: plex
-    network_mode: host
+    container_name: cloudflared-tunnel
+    command: tunnel run
     environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=${TZ}
-      - VERSION=docker
-      - PLEX_CLAIM=https://plex.tv/claim #optional
-    volumes:
-      - ${DOCKERCONFDIR}/plex:/config
-      - ${DOCKERSTORAGEDIR}/media:/shared/media
-    restart: unless-stopped
+      <<: [*default-environment]
+      TUNNEL_TOKEN: ${TUNNEL_TOKEN}
 
   gluetun:
+    <<: *common
     image: qmcgaw/gluetun
     container_name: gluetun
-    restart: always
-    # line above must be uncommented to allow external containers to connect. See https://github.com/qdm12/gluetun/wiki/Connect-a-container-to-gluetun#external-container-to-gluetun
+    # line above must be uncommented to allow external containers to connect.
+    # See https://github.com/qdm12/gluetun-wiki/blob/main/setup/connect-a-container-to-gluetun.md#external-container-to-gluetun
     cap_add:
       - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
     network_mode: bridge
     ports:
       - 8888:8888/tcp # HTTP proxy
       - 8388:8388/tcp # Shadowsocks
       - 8388:8388/udp # Shadowsocks
       # other ports
-      - 9117:9117 # jacket
-      - 7878:7878 # radarr
-      - 8787:8787 # readarr
-      - 8989:8989 # sonarr
-      - 9091:9091 # transmission
-      - 51413:51413 # transmission
-      - 51413:51413/udp # transmission
+      - 8080:8080 # qbitorrent
+      - 6881:6881 # qbitorrent
+      - 6881:6881/udp # qbitorrent
     volumes:
       - ${DOCKERCONFDIR}/gluetun:/gluetun
     environment:
-      # See https://github.com/qdm12/gluetun/wiki
-      - VPN_SERVICE_PROVIDER=${VPN_SERVICE_PROVIDER}
-      - VPN_TYPE=wireguard
-      - WIREGUARD_PRIVATE_KEY=${WIREGUARD_PRIVATE_KEY}
-      - WIREGUARD_ADDRESSES=${WIREGUARD_ADDRESSES}
-      - WIREGUARD_PRESHARED_KEY=${WIREGUARD_PRESHARED_KEY}
-      - SERVER_REGIONS=France
-      # Timezone for accurate logs times
-      - TZ=${TZ}
-
-  transmission:
-    image: ghcr.io/linuxserver/transmission
-    container_name: transmission
-    environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=${TZ}
-      #- USER=${TRANSMISSION_USER}
-      #- PASS=${TRANSMISSION_PASS}
-    volumes:
-      - ${DOCKERCONFDIR}/transmission:/config
-      - ${DOCKERSTORAGEDIR}:/shared
-    restart: unless-stopped
-    depends_on:
-      - gluetun
-    network_mode: "service:gluetun"
+      # See https://github.com/qdm12/gluetun-wiki/tree/main/setup#setup
+      <<: [*default-environment]
+      VPN_SERVICE_PROVIDER: ${VPN_SERVICE_PROVIDER}
+      VPN_TYPE: wireguard
+      # OpenVPN:
+      # OPENVPN_USER:
+      # OPENVPN_PASSWORD:
+      # Wireguard:
+      WIREGUARD_PRIVATE_KEY: ${WIREGUARD_PRIVATE_KEY}
+      WIREGUARD_ADDRESSES: ${WIREGUARD_ADDRESSES}
+      WIREGUARD_PRESHARED_KEY: ${WIREGUARD_PRESHARED_KEY}
+      SERVER_REGIONS: France
+      # Server list updater
+      # See https://github.com/qdm12/gluetun-wiki/blob/main/setup/servers.md#update-the-vpn-servers-list
+      # UPDATER_PERIOD:
 
   jackett:
-    image: ghcr.io/linuxserver/jackett
+    <<: *common
+    image: lscr.io/linuxserver/jackett:latest
     container_name: jackett
     environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=${TZ}
-      - AUTO_UPDATE=true #optional
-      - RUN_OPTS=<run options here> #optional
+      <<: [*default-environment]
+      AUTO_UPDATE: true #optional
+      # RUN_OPTS: #optional
     volumes:
       - ${DOCKERCONFDIR}/jackett:/config
-    restart: always
+    ports:
+      - 9117:9117
+
+  jellyfin:
+    <<: *common
+    image: lscr.io/linuxserver/jellyfin:latest
+    container_name: jellyfin
+    environment:
+      <<: [*default-environment]
+      UMASK_SET: 022 #optional
+      # JELLYFIN_PublishedServerUrl: 192.168.0.5 #optional
+    group_add:
+      - "107"
+    volumes:
+      - ${DOCKERCONFDIR}/jellyfin:/config
+      - ${DOCKERSTORAGEDIR}/media:/data
+    devices:
+      - /dev/dri:/dev/dri
+    ports:
+      - 8096:8096
+      # - 8920:8920 #optional
+      # - 7359:7359/udp #optional
+      # - 1900:1900/udp #optional
+
+  jellyseerr:
+    <<: *common
+    image: fallenbagel/jellyseerr:latest
+    container_name: jellyseerr
+    environment:
+      <<: [*default-environment]
+      LOG_LEVEL: debug
+    ports:
+        - 5055:5055
+    volumes:
+      - ${DOCKERCONFDIR}/jellyseerr:/app/config
+
+  plex:
+    <<: *common
+    image: lscr.io/linuxserver/plex:latest
+    container_name: plex
+    network_mode: host
+    environment:
+      <<: [*default-environment]
+      VERSION: docker
+      # PLEX_CLAIM: https://plex.tv/claim #optional
+    volumes:
+      - ${DOCKERCONFDIR}/plex:/config
+      - ${DOCKERSTORAGEDIR}/media:/shared/media
+
+  plextraktsync:
+    <<: *common
+    image: lscr.io/linuxserver-labs/plextraktsync:latest
+    container_name: plextraktsync
+    volumes:
+      - ${DOCKERCONFDIR}/plextraktsync:/config
+    environment:
+      <<: [*default-environment]
+
+  portainer:
+    <<: *common
+    image: portainer/portainer-ce:latest
+    container_name: portainer
+    ports:
+      - 9000:9000
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${DOCKERCONFDIR}/portainer:/data
+    environment:
+      <<: [*default-environment]
+
+  qbittorrent:
+    <<: *common
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    environment:
+      <<: [*default-environment]
+      WEBUI_PORT: 8080
+      TORRENTING_PORT: 6881
+      DOCKER_MODS: ghcr.io/gabe565/linuxserver-mod-vuetorrent
+    volumes:
+      - ${DOCKERCONFDIR}/qbittorrent:/config
+      - ${DOCKERSTORAGEDIR}:/shared
     depends_on:
       - gluetun
     network_mode: "service:gluetun"
 
   radarr:
-    image: ghcr.io/linuxserver/radarr
+    <<: *common
+    image: lscr.io/linuxserver/radarr:latest
     container_name: radarr
-    environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=${TZ}
     volumes:
       - ${DOCKERCONFDIR}/radarr:/config
       - ${DOCKERSTORAGEDIR}:/shared
-    restart: always
-    depends_on:
-      - gluetun
-      - jackett
-      - transmission
-    network_mode: "service:gluetun"
+    ports:
+      - 7878:7878
+    environment:
+      <<: [*default-environment]
 
   sonarr:
-    image: ghcr.io/linuxserver/sonarr
+    <<: *common
+    image: lscr.io/linuxserver/sonarr:latest
     container_name: sonarr
-    environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=${TZ}
     volumes:
       - ${DOCKERCONFDIR}/sonarr:/config
       - ${DOCKERSTORAGEDIR}:/shared
-    restart: always
-    depends_on:
-      - gluetun
-      - jackett
-      - transmission
-    network_mode: "service:gluetun"
-
-  readarr:
-    image: lscr.io/linuxserver/readarr:develop
-    container_name: readarr
-    environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=${TZ}
-    volumes:
-      - ${DOCKERCONFDIR}/readarr:/config
-      - ${DOCKERSTORAGEDIR}:/shared
-    restart: always
-    depends_on:
-      - gluetun
-      - jackett
-      - transmission
-    network_mode: "service:gluetun"
-
-  kavita:
-    image: kizaing/kavita:latest
-    container_name: kavita
-    volumes:
-      - ${DOCKERSTORAGEDIR}/media/ebooks:/manga
-      - ${DOCKERCONFDIR}/kavita:/kavita/config
     ports:
-      - "5000:5000"
+      - 8989:8989
     environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=${TZ}
-    restart: unless-stopped
+      <<: [*default-environment]
+
+  uptime-kuma:
+    <<: *common
+    image: louislam/uptime-kuma:1
+    container_name: uptime-kuma
+    ports:
+      - 3001:3001  # <Host Port>:<Container Port>
+    volumes:
+      - ${DOCKERCONFDIR}/uptime-kuma:/app/data
+    environment:
+      <<: [*default-environment]
+
+  watchtower:
+    <<: *common
+    image: containrrr/watchtower
+    container_name: watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      <<: [*default-environment]
+      WATCHTOWER_CLEANUP: true
+      WATCHTOWER_INCLUDE_RESTARTING: true
+      WATCHTOWER_INCLUDE_STOPPED: true
+      WATCHTOWER_REVIVE_STOPPED: false
+      WATCHTOWER_NO_RESTART: false
+      WATCHTOWER_TIMEOUT: 30s
+      WATCHTOWER_SCHEDULE: 0 0 4 * * *
+      WATCHTOWER_DEBUG: false
