@@ -1,6 +1,6 @@
 # Seedbox
 
-Seedbox aims to provide a turnkey solution to automate the self-hosting of your media server with a few extras.
+Seedbox aims to provide a turnkey solution to automate the self-hosting of your media server with a few optional extras.
 
 ## Table of Contents
 
@@ -9,19 +9,20 @@ Seedbox aims to provide a turnkey solution to automate the self-hosting of your 
   - [Quickstart](#quickstart)
   - [Notes](#notes)
   - [Services](#services)
-    - [AdGuardHome](#adguardhome)
-    - [Cloudflared Tunnel](#cloudflared-tunnel)
+    - [AdGuardHome (optional)](#adguardhome-optional)
+    - [Cloudflared Tunnel (optional)](#cloudflared-tunnel-optional)
     - [Gluetun](#gluetun)
     - [Jackett](#jackett)
     - [Jellyfin](#jellyfin)
     - [Jellyseerr](#jellyseerr)
-    - [Plex](#plex)
-    - [PlexTraktSync](#plextraktsync)
+    - [Plex (optional)](#plex-optional)
+    - [PlexTraktSync (optional)](#plextraktsync-optional)
     - [Portainer](#portainer)
     - [qBittorrent](#qbittorrent)
     - [Radarr](#radarr)
+    - [Readeck (optional)](#readeck-optional)
     - [Sonarr](#sonarr)
-    - [Uptime Kuma](#uptime-kuma)
+    - [Uptime Kuma (optional)](#uptime-kuma-optional)
     - [Watchtower](#watchtower)
 
 ## Quickstart
@@ -52,17 +53,18 @@ docker-compose up -d
 
 - The `gluetun` service is configured for WireGuard by default. Adjust settings as needed for your VPN provider.
 - Ensure the specified directories for `DOCKERCONFDIR` and `DOCKERSTORAGEDIR` exist on your host machine.
-- Some services, such as `plex` and `portainer`, require elevated permissions to function correctly.
+- Why is there both Plex and Jellyfin? Because Plex has a better UI/UX but is limited in the free version and Jellyfin can do hardware transcoding.
+- For Readeck, all environment variables are optional and should be commented unless you want to access the service outside your local network. In which case, you will need to provide both `DOCKERHOST` and `DOMAIN`.
 
 This Docker Compose stack provides a comprehensive setup for managing various network and media services efficiently. Adjust configurations as necessary to suit your environment and preferences.
 
 ## Services
 
-### AdGuardHome
+### AdGuardHome (optional)
 
 A network-wide software for blocking ads and tracking, enhancing privacy and security. [More information](https://github.com/AdguardTeam/AdGuardHome)
 
-### Cloudflared Tunnel
+### Cloudflared Tunnel (optional)
 
 A tunneling service by Cloudflare that securely exposes local servers to the internet without needing a public IP or port forwarding. [More information](https://github.com/cloudflare/cloudflared)
 
@@ -82,11 +84,11 @@ An open-source media server that manages and streams your personal media, includ
 
 A companion application for Jellyfin that allows users to request new media content, automating media management and acquisition. [More information](https://github.com/Fallenbagel/jellyseerr)
 
-### Plex
+### Plex (optional)
 
 A media server that organizes video, music, and photos from personal media libraries and streams them to devices both locally and remotely. [More information](https://github.com/linuxserver/docker-plex)
 
-### PlexTraktSync
+### PlexTraktSync (optional)
 
 A service that synchronizes your Plex watch history with Trakt.tv, helping you keep track of what you’ve watched across different platforms. [More information](https://github.com/linuxserver-labs/docker-plextraktsync)
 
@@ -102,11 +104,15 @@ An open-source BitTorrent client that facilitates downloading and managing torre
 
 An automated movie collection manager that downloads movies from Usenet or torrents, organizes them, and keeps them updated. [More information](https://github.com/linuxserver/docker-radarr)
 
+### Readeck (optional)
+
+A simple web application that lets you save the precious readable content of web pages you like and want to keep forever. [More information](https://codeberg.org/readeck/readeck)
+
 ### Sonarr
 
 An automated TV series collection manager that downloads TV shows from Usenet or torrents, organizes them, and keeps them updated. [More information](https://github.com/linuxserver/docker-sonarr)
 
-### Uptime Kuma
+### Uptime Kuma (optional)
 
 A self-hosted monitoring tool that keeps track of the uptime status of your services and websites. [More information](https://github.com/louislam/uptime-kuma)
 

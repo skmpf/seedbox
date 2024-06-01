@@ -114,7 +114,7 @@ services:
       <<: [*default-environment]
       LOG_LEVEL: debug
     ports:
-        - 5055:5055
+      - 5055:5055
     volumes:
       - ${DOCKERCONFDIR}/jellyseerr:/app/config
 
@@ -180,6 +180,34 @@ services:
     environment:
       <<: [*default-environment]
 
+  readeck:
+    <<: *common
+    image: codeberg.org/readeck/readeck:latest
+    container_name: readeck
+    ports:
+      - 8000:8000
+    environment:
+      <<: [*default-environment]
+      # Defines the application log level. Can be error, warning, info, debug.
+      READECK_LOG_LEVEL: info
+      # The IP address on which Readeck listens.
+      READECK_SERVER_HOST: 0.0.0.0
+      # The TCP port on which Readeck listens. Update container port above to match (right of colon).
+      READECK_SERVER_PORT: 8000
+      # The URL prefix of Readeck.
+      READECK_SERVER_PREFIX: /
+      # A list of hostnames allowed in HTTP requests. Required for reverse proxy configuration.
+      READECK_ALLOWED_HOSTS: "${DOCKERHOST},later.${DOMAIN}"
+      # Use the 'X-Forwarded-' headers. Required for reverse proxy configuration.
+      READECK_USE_X_FORWARDED: true
+    volumes:
+      - ${DOCKERCONFDIR}/readeck:/readeck
+    healthcheck:
+      test: ["CMD", "/bin/readeck", "healthcheck", "-config", "config.toml"]
+      interval: 30s
+      timeout: 2s
+      retries: 3
+
   sonarr:
     <<: *common
     image: lscr.io/linuxserver/sonarr:latest
@@ -197,7 +225,7 @@ services:
     image: louislam/uptime-kuma:1
     container_name: uptime-kuma
     ports:
-      - 3001:3001  # <Host Port>:<Container Port>
+      - 3001:3001 # <Host Port>:<Container Port>
     volumes:
       - ${DOCKERCONFDIR}/uptime-kuma:/app/data
     environment:
