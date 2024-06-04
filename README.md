@@ -24,6 +24,7 @@ Seedbox aims to provide a turnkey solution to automate the self-hosting of your 
     - [Sonarr](#sonarr)
     - [Uptime Kuma (optional)](#uptime-kuma-optional)
     - [Watchtower](#watchtower)
+    - [ZeroTier](#zerotier)
 
 ## Quickstart
 
@@ -119,3 +120,7 @@ A self-hosted monitoring tool that keeps track of the uptime status of your serv
 ### Watchtower
 
 A service that automatically updates running Docker containers to the latest available versions. [More information](https://github.com/containrrr/watchtower)
+
+### ZeroTier
+
+A VPN service that provides secure and private connections to your devices. [More information](https://github.com/zerotier/ZeroTierOne)

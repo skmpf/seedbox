@@ -247,3 +247,18 @@ services:
       WATCHTOWER_TIMEOUT: 30s
       WATCHTOWER_SCHEDULE: 0 0 4 * * *
       WATCHTOWER_DEBUG: false
+
+  zerotier:
+    <<: *common
+    image: zerotier/zerotier-synology
+    container_name: zerotier
+    devices:
+      - /dev/net/tun
+    network_mode: host
+    cap_add:
+      - NET_ADMIN
+      - SYS_ADMIN
+    volumes:
+      - ${DOCKERCONFDIR}/zerotier:/var/lib/zerotier-one
+    environment:
+      <<: [*default-environment]
