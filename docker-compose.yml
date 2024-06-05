@@ -197,7 +197,7 @@ services:
       # The URL prefix of Readeck.
       READECK_SERVER_PREFIX: /
       # A list of hostnames allowed in HTTP requests. Required for reverse proxy configuration.
-      READECK_ALLOWED_HOSTS: "${DOCKERHOST},later.${DOMAIN}"
+      READECK_ALLOWED_HOSTS: ${HOSTS}
       # Use the 'X-Forwarded-' headers. Required for reverse proxy configuration.
       READECK_USE_X_FORWARDED: true
     volumes:
