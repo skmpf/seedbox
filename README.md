@@ -13,9 +13,9 @@ Seedbox aims to provide a turnkey solution to automate the self-hosting of your 
     - [Cloudflared Tunnel (optional)](#cloudflared-tunnel-optional)
     - [Gluetun](#gluetun)
     - [Jackett](#jackett)
-    - [Jellyfin](#jellyfin)
-    - [Jellyseerr](#jellyseerr)
-    - [Plex (optional)](#plex-optional)
+    - [Lidarr (optional)](#lidarr-optional)
+    - [Overseerr (optional)](#overseerr-optional)
+    - [Plex](#plex)
     - [PlexTraktSync (optional)](#plextraktsync-optional)
     - [Portainer](#portainer)
     - [qBittorrent](#qbittorrent)
@@ -77,15 +77,15 @@ A VPN client to route your Docker containers' traffic through a VPN service for 
 
 An indexer service that integrates with various torrent and Usenet sites, providing unified search results for use with \*arr services. [More information](https://github.com/linuxserver/docker-jackett)
 
-### Jellyfin
+### Lidarr (optional)
 
-An open-source media server that manages and streams your personal media, including movies, TV shows, music, and photos. [More information](https://github.com/linuxserver/docker-jellyfin)
+A music metadata and download automation application for Usenet and BitTorrent users. [More information](https://github.com/linuxserver/docker-lidarr)
 
-### Jellyseerr
+### Overseerr (optional)
 
-A companion application for Jellyfin that allows users to request new media content, automating media management and acquisition. [More information](https://github.com/Fallenbagel/jellyseerr)
+A companion application for Plex that allows users to request new media content, automating media management and acquisition. [More information](https://github.com/sct/overseerr)
 
-### Plex (optional)
+### Plex
 
 A media server that organizes video, music, and photos from personal media libraries and streams them to devices both locally and remotely. [More information](https://github.com/linuxserver/docker-plex)
 

@@ -85,38 +85,29 @@ services:
     ports:
       - 9117:9117
 
-  jellyfin:
+  lidarr:
     <<: *common
-    image: lscr.io/linuxserver/jellyfin:latest
-    container_name: jellyfin
+    image: lscr.io/linuxserver/lidarr:latest
+    container_name: lidarr
     environment:
       <<: [*default-environment]
-      UMASK_SET: 022 #optional
-      # JELLYFIN_PublishedServerUrl: 192.168.0.5 #optional
-    group_add:
-      - "107"
     volumes:
-      - ${DOCKERCONFDIR}/jellyfin:/config
-      - ${DOCKERSTORAGEDIR}/media:/data
-    devices:
-      - /dev/dri:/dev/dri
+      - ${DOCKERCONFDIR}/lidarr:/config
+      - ${DOCKERSTORAGEDIR}:/shared
+      # - /path/to/music:/music #optional
     ports:
-      - 8096:8096
-      # - 8920:8920 #optional
-      # - 7359:7359/udp #optional
-      # - 1900:1900/udp #optional
+      - 8686:8686
 
-  jellyseerr:
+  overseerr:
     <<: *common
-    image: fallenbagel/jellyseerr:latest
-    container_name: jellyseerr
+    image: sctx/overseerr:latest
+    container_name: overseerr
     environment:
       <<: [*default-environment]
-      LOG_LEVEL: debug
     ports:
       - 5055:5055
     volumes:
-      - ${DOCKERCONFDIR}/jellyseerr:/app/config
+      - ${DOCKERCONFDIR}/overseerr:/app/config
 
   plex:
     <<: *common
