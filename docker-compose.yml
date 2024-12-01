@@ -1,6 +1,5 @@
 x-environment: &default-environment
   PUID: ${PUID}
-  PGID: ${PGID}
   TZ: ${TZ}
 
 x-common: &common
