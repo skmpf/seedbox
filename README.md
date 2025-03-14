@@ -9,22 +9,15 @@ Seedbox aims to provide a turnkey solution to automate the self-hosting of your 
   - [Quickstart](#quickstart)
   - [Notes](#notes)
   - [Services](#services)
-    - [AdGuardHome (optional)](#adguardhome-optional)
-    - [Cloudflared Tunnel (optional)](#cloudflared-tunnel-optional)
     - [Gluetun](#gluetun)
     - [Jackett](#jackett)
     - [Lidarr (optional)](#lidarr-optional)
     - [Overseerr (optional)](#overseerr-optional)
     - [Plex](#plex)
     - [PlexTraktSync (optional)](#plextraktsync-optional)
-    - [Portainer](#portainer)
     - [qBittorrent](#qbittorrent)
     - [Radarr](#radarr)
-    - [Readeck (optional)](#readeck-optional)
     - [Sonarr](#sonarr)
-    - [Uptime Kuma (optional)](#uptime-kuma-optional)
-    - [Watchtower](#watchtower)
-    - [ZeroTier (optional)](#zerotier-optional)
 
 ## Quickstart
 
@@ -41,37 +34,42 @@ cd seedbox
 cp .env.template .env
 ```
 
-3. Fill in the required value in the `.env` file
+3. Fill in the required values in the `.env` file:
+   - `DOCKERCONFDIR`: Directory for container configuration files
+   - `DOCKERSTORAGEDIR`: Directory for media storage
+   - `PUID`: Your user's ID (run `id -u` to find it)
+   - `TZ`: Your timezone (e.g., Europe/Paris)
+   - VPN settings for Gluetun (see [VPN setup](#gluetun))
+
 4. Start the stack
 
 ```bash
 docker-compose up -d
 ```
 
-5. Use the appropriate ports to access the web interfaces of each services.
+5. Access the web interfaces for each service:
+   - qBittorrent: http://localhost:8080 (default credentials: admin/adminadmin)
+   - Radarr: http://localhost:7878
+   - Sonarr: http://localhost:8989
+   - Jackett: http://localhost:9117
+   - Lidarr: http://localhost:8686
+   - Overseerr: http://localhost:5055
+   - Plex: http://localhost:32400/web
 
 ## Notes
 
-- The `gluetun` service is configured for WireGuard by default. Adjust settings as needed for your VPN provider.
-- Ensure the specified directories for `DOCKERCONFDIR` and `DOCKERSTORAGEDIR` exist on your host machine.
-- Why is there both Plex and Jellyfin? Because Plex has a better UI/UX but is limited in the free version and Jellyfin can do hardware transcoding.
-- For Readeck, all environment variables are optional and should be commented unless you want to access the service outside your local network. In which case, you will need to provide both `DOCKERHOST` and `DOMAIN`.
-
-This Docker Compose stack provides a comprehensive setup for managing various network and media services efficiently. Adjust configurations as necessary to suit your environment and preferences.
+- The `gluetun` service is configured for WireGuard by default. If you prefer OpenVPN, edit the `docker-compose.yml` file and update the `VPN_TYPE` and related environment variables.
+- qBittorrent is configured to route through the VPN (gluetun) service.
+- Make sure to create the directories specified for `DOCKERCONFDIR` and `DOCKERSTORAGEDIR` before starting the services.
+- Media accessible in the `/shared` directory inside containers for consistent path references.
+- Plex runs in host network mode for better local network discovery.
+- All services use the non-root PUID/PGID for better security.
 
 ## Services
 
-### AdGuardHome (optional)
-
-A network-wide software for blocking ads and tracking, enhancing privacy and security. [More information](https://github.com/AdguardTeam/AdGuardHome)
-
-### Cloudflared Tunnel (optional)
-
-A tunneling service by Cloudflare that securely exposes local servers to the internet without needing a public IP or port forwarding. [More information](https://github.com/cloudflare/cloudflared)
-
 ### Gluetun
 
-A VPN client to route your Docker containers' traffic through a VPN service for enhanced privacy and security. [More information](https://github.com/qdm12/gluetun)
+A VPN client to route your Docker containers' traffic through a VPN service for enhanced privacy and security. Currently configured for WireGuard, but supports many VPN providers. [More information](https://github.com/qdm12/gluetun)
 
 ### Jackett
 
@@ -91,11 +89,7 @@ A media server that organizes video, music, and photos from personal media libra
 
 ### PlexTraktSync (optional)
 
-A service that synchronizes your Plex watch history with Trakt.tv, helping you keep track of what you’ve watched across different platforms. [More information](https://github.com/linuxserver-labs/docker-plextraktsync)
-
-### Portainer
-
-A web-based interface for managing Docker environments, making it easier to deploy, manage, and troubleshoot containerized applications. [More information](https://github.com/portainer/portainer)
+A service that synchronizes your Plex watch history with Trakt.tv, helping you keep track of what you've watched across different platforms. [More information](https://github.com/linuxserver-labs/docker-plextraktsync)
 
 ### qBittorrent
 
@@ -105,22 +99,6 @@ An open-source BitTorrent client that facilitates downloading and managing torre
 
 An automated movie collection manager that downloads movies from Usenet or torrents, organizes them, and keeps them updated. [More information](https://github.com/linuxserver/docker-radarr)
 
-### Readeck (optional)
-
-A simple web application that lets you save the precious readable content of web pages you like and want to keep forever. [More information](https://codeberg.org/readeck/readeck)
-
 ### Sonarr
 
 An automated TV series collection manager that downloads TV shows from Usenet or torrents, organizes them, and keeps them updated. [More information](https://github.com/linuxserver/docker-sonarr)
-
-### Uptime Kuma (optional)
-
-A self-hosted monitoring tool that keeps track of the uptime status of your services and websites. [More information](https://github.com/louislam/uptime-kuma)
-
-### Watchtower
-
-A service that automatically updates running Docker containers to the latest available versions. [More information](https://github.com/containrrr/watchtower)
-
-### ZeroTier (optional)
-
-A VPN service that provides secure and private connections to your devices. [More information](https://github.com/zerotier/ZeroTierOne)
