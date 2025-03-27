@@ -11,7 +11,6 @@ Seedbox aims to provide a turnkey solution to automate the self-hosting of your 
   - [Services](#services)
     - [Gluetun](#gluetun)
     - [Jackett](#jackett)
-    - [Lidarr (optional)](#lidarr-optional)
     - [Overseerr (optional)](#overseerr-optional)
     - [Plex](#plex)
     - [PlexTraktSync (optional)](#plextraktsync-optional)
@@ -52,7 +51,6 @@ docker-compose up -d
    - Radarr: http://localhost:7878
    - Sonarr: http://localhost:8989
    - Jackett: http://localhost:9117
-   - Lidarr: http://localhost:8686
    - Overseerr: http://localhost:5055
    - Plex: http://localhost:32400/web
 
@@ -74,10 +72,6 @@ A VPN client to route your Docker containers' traffic through a VPN service for 
 ### Jackett
 
 An indexer service that integrates with various torrent and Usenet sites, providing unified search results for use with \*arr services. [More information](https://github.com/linuxserver/docker-jackett)
-
-### Lidarr (optional)
-
-A music metadata and download automation application for Usenet and BitTorrent users. [More information](https://github.com/linuxserver/docker-lidarr)
 
 ### Overseerr (optional)
 
