@@ -56,6 +56,8 @@ services:
       - ${DOCKERCONFDIR}/jackett:/config
     ports:
       - 9117:9117
+    labels:
+      wud.tag.include: latest
 
   overseerr:
     <<: *common
@@ -67,6 +69,8 @@ services:
       - 5055:5055
     volumes:
       - ${DOCKERCONFDIR}/overseerr:/app/config
+    labels:
+      wud.tag.include: latest
 
   plex:
     <<: *common
@@ -80,6 +84,8 @@ services:
     volumes:
       - ${DOCKERCONFDIR}/plex:/config
       - ${DOCKERSTORAGEDIR}/media:/shared/media
+    labels:
+      wud.tag.include: latest
 
   plextraktsync:
     <<: *common
@@ -89,6 +95,8 @@ services:
       - ${DOCKERCONFDIR}/plextraktsync:/config
     environment:
       <<: [*default-environment]
+    labels:
+      wud.tag.include: latest
 
   qbittorrent:
     <<: *common
@@ -105,6 +113,8 @@ services:
     depends_on:
       - gluetun
     network_mode: "service:gluetun"
+    labels:
+      wud.tag.include: latest
 
   radarr:
     <<: *common
@@ -117,6 +127,8 @@ services:
       - 7878:7878
     environment:
       <<: [*default-environment]
+    labels:
+      wud.tag.include: latest
 
   sonarr:
     <<: *common
@@ -129,3 +141,5 @@ services:
       - 8989:8989
     environment:
       <<: [*default-environment]
+    labels:
+      wud.tag.include: latest
