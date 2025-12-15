@@ -14,6 +14,7 @@ Seedbox aims to provide a turnkey solution to automate the self-hosting of your 
     - [Overseerr (optional)](#overseerr-optional)
     - [Plex](#plex)
     - [PlexTraktSync (optional)](#plextraktsync-optional)
+    - [Navidrome (optional)](#navidrome-optional)
     - [qBittorrent](#qbittorrent)
     - [Radarr](#radarr)
     - [Sonarr](#sonarr)
@@ -34,6 +35,7 @@ cp .env.template .env
 ```
 
 3. Fill in the required values in the `.env` file:
+
    - `DOCKERCONFDIR`: Directory for container configuration files
    - `DOCKERSTORAGEDIR`: Directory for media storage
    - `PUID`: Your user's ID (run `id -u` to find it)
@@ -84,6 +86,10 @@ A media server that organizes video, music, and photos from personal media libra
 ### PlexTraktSync (optional)
 
 A service that synchronizes your Plex watch history with Trakt.tv, helping you keep track of what you've watched across different platforms. [More information](https://github.com/linuxserver-labs/docker-plextraktsync)
+
+### Navidrome (optional)
+
+A self-hosted music server that allows you to stream your music collection from anywhere, with a lightweight and efficient design. [More information](https://github.com/navidrome/navidrome/)
 
 ### qBittorrent
 

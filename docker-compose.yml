@@ -90,6 +90,22 @@ services:
     environment:
       <<: [*default-environment]
 
+  navidrome:
+    <<: *common
+    image: deluan/navidrome:latest
+    container_name: navidrome
+    user: ${PUID}:${PGID} # should be owner of volumes
+    ports:
+      - "4533:4533"
+    restart: unless-stopped
+    environment:
+      <<: [*default-environment]
+      # Optional: put your config options customization here. Examples:
+      # ND_LOGLEVEL: debug
+    volumes:
+      - ${DOCKERCONFDIR}/navidrome:/data
+      - ${DOCKERSTORAGEDIR}/media/music:/music:ro
+
   qbittorrent:
     <<: *common
     image: lscr.io/linuxserver/qbittorrent:latest
