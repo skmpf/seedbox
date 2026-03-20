@@ -57,16 +57,18 @@ services:
     ports:
       - 9117:9117
 
-  overseerr:
+  seerr:
     <<: *common
-    image: sctx/overseerr:latest
-    container_name: overseerr
+    image: ghcr.io/seerr-team/seerr:latest
+    container_name: seerr
+    init: true
+    user: "1000:1000"
     environment:
       <<: [*default-environment]
     ports:
       - 5055:5055
     volumes:
-      - ${DOCKERCONFDIR}/overseerr:/app/config
+      - ${DOCKERCONFDIR}/seerr:/app/config
 
   plex:
     <<: *common

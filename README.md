@@ -11,7 +11,7 @@ Seedbox aims to provide a turnkey solution to automate the self-hosting of your 
   - [Services](#services)
     - [Gluetun](#gluetun)
     - [Jackett](#jackett)
-    - [Overseerr (optional)](#overseerr-optional)
+    - [Seerr (optional)](#seerr-optional)
     - [Plex](#plex)
     - [PlexTraktSync (optional)](#plextraktsync-optional)
     - [Navidrome (optional)](#navidrome-optional)
@@ -53,7 +53,7 @@ docker-compose up -d
    - Radarr: http://localhost:7878
    - Sonarr: http://localhost:8989
    - Jackett: http://localhost:9117
-   - Overseerr: http://localhost:5055
+   - Seerr: http://localhost:5055
    - Plex: http://localhost:32400/web
 
 ## Notes
@@ -75,9 +75,11 @@ A VPN client to route your Docker containers' traffic through a VPN service for 
 
 An indexer service that integrates with various torrent and Usenet sites, providing unified search results for use with \*arr services. [More information](https://github.com/linuxserver/docker-jackett)
 
-### Overseerr (optional)
+### Seerr (optional)
 
-A companion application for Plex that allows users to request new media content, automating media management and acquisition. [More information](https://github.com/sct/overseerr)
+A fork and continuation of Overseerr — a companion application for Plex that allows users to request new media content, automating media management and acquisition. Seerr adds enhancements such as PostgreSQL support and DNS caching. [More information](https://github.com/seerr-team/seerr)
+
+> **Migrating from Overseerr?** Back up your existing `${DOCKERCONFDIR}/overseerr` directory, then copy (or rename) it to `${DOCKERCONFDIR}/seerr`. Seerr will automatically migrate your Overseerr configuration on first start. See the [official migration guide](https://docs.seerr.dev/migration-guide) for details.
 
 ### Plex
 
