@@ -10,13 +10,14 @@ Seedbox aims to provide a turnkey solution to automate the self-hosting of your 
   - [Notes](#notes)
   - [Services](#services)
     - [Gluetun](#gluetun)
-    - [Jackett](#jackett)
-    - [Seerr (optional)](#seerr-optional)
     - [Plex](#plex)
-    - [Navidrome (optional)](#navidrome-optional)
+    - [Prowlarr](#prowlarr)
     - [qBittorrent](#qbittorrent)
     - [Radarr](#radarr)
     - [Sonarr](#sonarr)
+    - [Flaresolverr (optional)](#flaresolverr-optional)
+    - [Navidrome (optional)](#navidrome-optional)
+    - [Seerr (optional)](#seerr-optional)
 
 ## Quickstart
 
@@ -47,12 +48,13 @@ docker-compose up -d
 ```
 
 5. Access the web interfaces for each service:
+   - Navidrome: http://localhost:4533
+   - Plex: http://localhost:32400/web
+   - Prowlarr: http://localhost:9696
    - qBittorrent: http://localhost:8080 (default credentials: admin/adminadmin)
    - Radarr: http://localhost:7878
-   - Sonarr: http://localhost:8989
-   - Jackett: http://localhost:9117
    - Seerr: http://localhost:5055
-   - Plex: http://localhost:32400/web
+   - Sonarr: http://localhost:8989
 
 ## Notes
 
@@ -69,21 +71,13 @@ docker-compose up -d
 
 A VPN client to route your Docker containers' traffic through a VPN service for enhanced privacy and security. Currently configured for WireGuard, but supports many VPN providers. [More information](https://github.com/qdm12/gluetun)
 
-### Jackett
-
-An indexer service that integrates with various torrent and Usenet sites, providing unified search results for use with \*arr services. [More information](https://github.com/linuxserver/docker-jackett)
-
-### Seerr (optional)
-
-A companion application for Plex that allows users to request new media content, automating media management and acquisition. [More information](https://github.com/seerr-team/seerr)
-
 ### Plex
 
 A media server that organizes video, music, and photos from personal media libraries and streams them to devices both locally and remotely. [More information](https://github.com/linuxserver/docker-plex)
 
-### Navidrome (optional)
+### Prowlarr
 
-A self-hosted music server that allows you to stream your music collection from anywhere, with a lightweight and efficient design. [More information](https://github.com/navidrome/navidrome/)
+An indexer manager/proxy built on the popular Jackett project, designed to integrate with applications like Sonarr and Radarr for managing torrent and Usenet indexers. [More information](https://github.com/Prowlarr/Prowlarr)
 
 ### qBittorrent
 
@@ -96,3 +90,15 @@ An automated movie collection manager that downloads movies from Usenet or torre
 ### Sonarr
 
 An automated TV series collection manager that downloads TV shows from Usenet or torrents, organizes them, and keeps them updated. [More information](https://github.com/linuxserver/docker-sonarr)
+
+### Flaresolverr (optional)
+
+A proxy server that bypasses Cloudflare's anti-bot protection, allowing applications like Sonarr and Radarr to access content from protected websites. [More information](https://github.com/flaresolverr/flaresolverr)
+
+### Navidrome (optional)
+
+A self-hosted music server that allows you to stream your music collection from anywhere, with a lightweight and efficient design. [More information](https://github.com/navidrome/navidrome/)
+
+### Seerr (optional)
+
+A companion application for Plex that allows users to request new media content, automating media management and acquisition. [More information](https://github.com/seerr-team/seerr)
