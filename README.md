@@ -11,9 +11,8 @@ Seedbox aims to provide a turnkey solution to automate the self-hosting of your 
   - [Services](#services)
     - [Gluetun](#gluetun)
     - [Jackett](#jackett)
-    - [Overseerr (optional)](#overseerr-optional)
+    - [Seerr (optional)](#seerr-optional)
     - [Plex](#plex)
-    - [PlexTraktSync (optional)](#plextraktsync-optional)
     - [Navidrome (optional)](#navidrome-optional)
     - [qBittorrent](#qbittorrent)
     - [Radarr](#radarr)
@@ -35,7 +34,6 @@ cp .env.template .env
 ```
 
 3. Fill in the required values in the `.env` file:
-
    - `DOCKERCONFDIR`: Directory for container configuration files
    - `DOCKERSTORAGEDIR`: Directory for media storage
    - `PUID`: Your user's ID (run `id -u` to find it)
@@ -53,7 +51,7 @@ docker-compose up -d
    - Radarr: http://localhost:7878
    - Sonarr: http://localhost:8989
    - Jackett: http://localhost:9117
-   - Overseerr: http://localhost:5055
+   - Seerr: http://localhost:5055
    - Plex: http://localhost:32400/web
 
 ## Notes
@@ -75,17 +73,13 @@ A VPN client to route your Docker containers' traffic through a VPN service for 
 
 An indexer service that integrates with various torrent and Usenet sites, providing unified search results for use with \*arr services. [More information](https://github.com/linuxserver/docker-jackett)
 
-### Overseerr (optional)
+### Seerr (optional)
 
-A companion application for Plex that allows users to request new media content, automating media management and acquisition. [More information](https://github.com/sct/overseerr)
+A companion application for Plex that allows users to request new media content, automating media management and acquisition. [More information](https://github.com/seerr-team/seerr)
 
 ### Plex
 
 A media server that organizes video, music, and photos from personal media libraries and streams them to devices both locally and remotely. [More information](https://github.com/linuxserver/docker-plex)
-
-### PlexTraktSync (optional)
-
-A service that synchronizes your Plex watch history with Trakt.tv, helping you keep track of what you've watched across different platforms. [More information](https://github.com/linuxserver-labs/docker-plextraktsync)
 
 ### Navidrome (optional)
 
