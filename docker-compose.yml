@@ -57,38 +57,6 @@ services:
     ports:
       - 9117:9117
 
-  seerr:
-    <<: *common
-    image: ghcr.io/seerr-team/seerr:latest
-    container_name: seerr
-    init: true
-    environment:
-      LOG_LEVEL: debug
-      TZ: ${TZ}
-    ports:
-      - 5055:5055
-    volumes:
-      - ${DOCKERCONFDIR}/seerr:/app/config
-    healthcheck:
-      test: wget --no-verbose --tries=1 --spider http://localhost:5055/api/v1/settings/public || exit 1
-      start_period: 20s
-      timeout: 3s
-      interval: 15s
-      retries: 3
-
-  plex:
-    <<: *common
-    image: lscr.io/linuxserver/plex:latest
-    container_name: plex
-    network_mode: host
-    environment:
-      <<: [*default-environment]
-      VERSION: docker
-      # PLEX_CLAIM: https://plex.tv/claim #optional
-    volumes:
-      - ${DOCKERCONFDIR}/plex:/config
-      - ${DOCKERSTORAGEDIR}/media:/shared/media
-
   navidrome:
     <<: *common
     image: deluan/navidrome:latest
@@ -104,6 +72,19 @@ services:
     volumes:
       - ${DOCKERCONFDIR}/navidrome:/data
       - ${DOCKERSTORAGEDIR}/media/music:/music:ro
+
+  plex:
+    <<: *common
+    image: lscr.io/linuxserver/plex:latest
+    container_name: plex
+    network_mode: host
+    environment:
+      <<: [*default-environment]
+      VERSION: docker
+      # PLEX_CLAIM: https://plex.tv/claim #optional
+    volumes:
+      - ${DOCKERCONFDIR}/plex:/config
+      - ${DOCKERSTORAGEDIR}/media:/shared/media
 
   qbittorrent:
     <<: *common
@@ -132,6 +113,25 @@ services:
       - 7878:7878
     environment:
       <<: [*default-environment]
+
+  seerr:
+    <<: *common
+    image: ghcr.io/seerr-team/seerr:latest
+    container_name: seerr
+    init: true
+    environment:
+      LOG_LEVEL: debug
+      TZ: ${TZ}
+    ports:
+      - 5055:5055
+    volumes:
+      - ${DOCKERCONFDIR}/seerr:/app/config
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider http://localhost:5055/api/v1/settings/public || exit 1
+      start_period: 20s
+      timeout: 3s
+      interval: 15s
+      retries: 3
 
   sonarr:
     <<: *common
