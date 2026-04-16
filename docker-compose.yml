@@ -6,6 +6,20 @@ x-common: &common
   restart: unless-stopped
 
 services:
+  calibre:
+    <<: *common
+    image: crocodilestick/calibre-web-automated:latest
+    container_name: calibre
+    environment:
+      <<: [*default-environment]
+    volumes:
+      - ${DOCKERCONFDIR}/calibre:/config
+      - ${DOCKERSTORAGEDIR}/media/ebooks/ingest:/cwa-book-ingest
+      - ${DOCKERSTORAGEDIR}/media/ebooks/library:/calibre-library
+      - ${DOCKERCONFDIR}/calibre/plugins:/config/.config/calibre/plugins
+    ports:
+      - 8083:8083
+
   flaresolverr:
     <<: *common
     image: ghcr.io/flaresolverr/flaresolverr:latest

@@ -9,6 +9,7 @@ Seedbox aims to provide a turnkey solution to automate the self-hosting of your 
   - [Quickstart](#quickstart)
   - [Notes](#notes)
   - [Services](#services)
+    - [Calibre Web Automated (optional)](#calibre-web-automated-optional)
     - [Gluetun](#gluetun)
     - [Plex](#plex)
     - [Prowlarr](#prowlarr)
@@ -41,13 +42,16 @@ cp .env.template .env
    - `TZ`: Your timezone (e.g., Europe/Paris)
    - VPN settings for Gluetun (see [VPN setup](#gluetun))
 
-4. Start the stack
+4. (Optional) If you do not want to run the optional services, comment out or deletethe corresponding sections in the `docker-compose.yml` file.
+
+5. Start the stack
 
 ```bash
 docker-compose up -d
 ```
 
-5. Access the web interfaces for each service:
+6. Access the web interfaces for each service:
+   - Calibre Web Automated: http://localhost:8083
    - Navidrome: http://localhost:4533
    - Plex: http://localhost:32400/web
    - Prowlarr: http://localhost:9696
@@ -66,6 +70,10 @@ docker-compose up -d
 - All services use the non-root PUID/PGID for better security.
 
 ## Services
+
+### Calibre Web Automated (optional)
+
+A web-based eBook management application that provides an interface to manage and read your eBook collection. It can automatically ingest new eBooks placed in a specified directory and supports various metadata providers. [More information](https://github.com/crocodilestick/Calibre-Web-Automated)
 
 ### Gluetun
 
