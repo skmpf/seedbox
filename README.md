@@ -11,7 +11,7 @@ Seedbox aims to provide a turnkey solution to automate the self-hosting of your 
   - [Services](#services)
     - [Calibre Web Automated (optional)](#calibre-web-automated-optional)
     - [Gluetun](#gluetun)
-    - [Plex](#plex)
+    - [Jellyfin](#jellyfin)
     - [Prowlarr](#prowlarr)
     - [qBittorrent](#qbittorrent)
     - [Radarr](#radarr)
@@ -53,7 +53,7 @@ docker-compose up -d
 6. Access the web interfaces for each service:
    - Calibre Web Automated: http://localhost:8083
    - Navidrome: http://localhost:4533
-   - Plex: http://localhost:32400/web
+   - Jellyfin: http://localhost:8096
    - Prowlarr: http://localhost:9696
    - qBittorrent: http://localhost:8080 (default credentials: admin/adminadmin)
    - Radarr: http://localhost:7878
@@ -66,7 +66,7 @@ docker-compose up -d
 - qBittorrent is configured to route through the VPN (gluetun) service.
 - Make sure to create the directories specified for `DOCKERCONFDIR` and `DOCKERSTORAGEDIR` before starting the services.
 - Media accessible in the `/shared` directory inside containers for consistent path references.
-- Plex runs in host network mode for better local network discovery.
+- Jellyfin runs in host network mode for better local network discovery.
 - All services use the non-root PUID/PGID for better security.
 
 ## Services
@@ -79,9 +79,9 @@ A web-based eBook management application that provides an interface to manage an
 
 A VPN client to route your Docker containers' traffic through a VPN service for enhanced privacy and security. Currently configured for WireGuard, but supports many VPN providers. [More information](https://github.com/qdm12/gluetun)
 
-### Plex
+### Jellyfin
 
-A media server that organizes video, music, and photos from personal media libraries and streams them to devices both locally and remotely. [More information](https://github.com/linuxserver/docker-plex)
+An open-source media server that organizes video, music, and photos from personal media libraries and streams them to devices both locally and remotely. [More information](https://github.com/linuxserver/docker-jellyfin)
 
 ### Prowlarr
 
@@ -109,4 +109,4 @@ A self-hosted music server that allows you to stream your music collection from 
 
 ### Seerr (optional)
 
-A companion application for Plex that allows users to request new media content, automating media management and acquisition. [More information](https://github.com/seerr-team/seerr)
+A companion application for Jellyfin that allows users to request new media content, automating media management and acquisition. [More information](https://github.com/seerr-team/seerr)
