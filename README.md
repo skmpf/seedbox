@@ -12,6 +12,7 @@ Seedbox aims to provide a turnkey solution to automate the self-hosting of your 
     - [Calibre Web Automated (optional)](#calibre-web-automated-optional)
     - [Gluetun](#gluetun)
     - [Jellyfin](#jellyfin)
+    - [Lidarr](#lidarr)
     - [Prowlarr](#prowlarr)
     - [qBittorrent](#qbittorrent)
     - [Radarr](#radarr)
@@ -54,6 +55,7 @@ docker-compose up -d
    - Calibre Web Automated: http://localhost:8083
    - Navidrome: http://localhost:4533
    - Jellyfin: http://localhost:8096
+   - Lidarr: http://localhost:8686
    - Prowlarr: http://localhost:9696
    - qBittorrent: http://localhost:8080 (default credentials: admin/adminadmin)
    - Radarr: http://localhost:7878
@@ -82,6 +84,10 @@ A VPN client to route your Docker containers' traffic through a VPN service for 
 ### Jellyfin
 
 An open-source media server that organizes video, music, and photos from personal media libraries and streams them to devices both locally and remotely. [More information](https://github.com/linuxserver/docker-jellyfin)
+
+### Lidarr
+
+An automated music collection manager that downloads albums from Usenet or torrents, organizes them, and keeps them updated. [More information](https://github.com/linuxserver/docker-lidarr)
 
 ### Prowlarr
 

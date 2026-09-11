@@ -97,6 +97,18 @@ services:
     group_add:
       - "937" # check yours: SSH in and run `cat /etc/group | grep videodriver`
 
+  lidarr:
+    <<: *common
+    image: lscr.io/linuxserver/lidarr:latest
+    container_name: lidarr
+    volumes:
+      - ${DOCKERCONFDIR}/lidarr:/config
+      - ${DOCKERSTORAGEDIR}:/shared
+    ports:
+      - 8686:8686
+    environment:
+      <<: [*default-environment]
+
   navidrome:
     <<: *common
     image: deluan/navidrome:latest
